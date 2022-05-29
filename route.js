@@ -21,8 +21,9 @@ ImageRouter
     .post("/",(req, res) => { requestHandlers.addImages(req, res) })
 
 EventRouter
-.get('/', (req, res) => { requestHandlers.getEvents(req, res) })
+.get('/:user_id', (req, res) => { requestHandlers.getEvents(req, res) })
 .post('/', (req, res) => { requestHandlers.addEvent(req, res) })
+.post('/:event_id', (req, res) => { requestHandlers.register_to_event(req, res) })
 
 
 module.exports= {
