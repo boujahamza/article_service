@@ -1,9 +1,6 @@
-const User = require("./Models/user.js");
 const articleDb = require("./Models/article.js");
-const CommentDb = require("./Models/article.js");
 const ImagesDb = require("./Models/Image.js");
 const EventDb = require("./Models/Events.js");
-const mongoose = require('mongoose');
 
 
 
@@ -88,8 +85,8 @@ const { uploadFile, getFileStream } = require('./s3');
 
 
 module.exports.addImages = (req, res) => {
-    let user_id=req.body.user_id;
-    if(!user_id) user_id = "1";
+    let user_id = req.body.user_id;
+    if (!user_id) user_id = "1";
     multipleUpload(req, res, (err) => {
         if (err) {
             console.log(err)
@@ -101,24 +98,24 @@ module.exports.addImages = (req, res) => {
             await unlinkFile(file.path);
             img.push(result.Location);
             if (img.length == req.files.length) {
-                let l=[];
-                img.forEach(i=>{
+                let l = [];
+                img.forEach(i => {
                     l.push({
-                        user_id:user_id,
-                        img_url:i
+                        user_id: user_id,
+                        img_url: i
                     })
                 })
                 ImagesDb.insertMany(l)
-                .then(() => {
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.json({
-                        path: img
-                    })
-                    res.end();
-                }, (err) => console.log(err))
-                .catch((err) => console.log(err));
-                
+                    .then(() => {
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json({
+                            path: img
+                        })
+                        res.end();
+                    }, (err) => console.log(err))
+                    .catch((err) => console.log(err));
+
             }
         });
 
@@ -143,11 +140,37 @@ module.exports.getImages = (req, res) => {
 
 /// Events
 module.exports.getEvents = (req, res) => {
+    const user_id = req.params.user_id;
     EventDb.find()
         .then((events) => {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.json(events);
+            result = [];
+            events.forEach(event => {
+                let flag=0;
+                event.contestants.forEach(contestant => {
+                    if (contestant.user_id== user_id) {
+                        result.push({
+                            event_id :event._id,
+                            poster_url: event.poster_url,
+                            event_title: event.title,
+                            isregistred:true,
+                            nbr_registers:event.contestants.length,
+                        });
+                        flag=1;
+                    }
+                })
+                if(flag==0){
+                    result.push({
+                        event_id:event._id,
+                        poster_url: event.poster_url,
+                        event_title: event.title,
+                        isregistred:false,
+                        nbr_registers:event.contestants.length,
+                    });
+                }
+            })
+            res.json(result);
             res.end();
         }, (err) => console.log(err))
         .catch((err) => console.log(err));
@@ -161,4 +184,16 @@ module.exports.addEvent = (req, res) => {
         }, (err) => console.log(err))
         .catch((err) => console.log(err));
 }
+module.exports.register_to_event = (req, res) => {
+    let event_id = req.params.event_id;
+    EventDb.findOneAndUpdate(
+        { _id: event_id },
+        { $push: { contestants: req.body } })
+        .then(() => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end();
+        }, (err) => console.log(err))
+        .catch((err) => console.log(err));
 
+}
