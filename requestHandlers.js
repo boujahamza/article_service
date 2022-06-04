@@ -197,3 +197,14 @@ module.exports.register_to_event = (req, res) => {
         .catch((err) => console.log(err));
 
 }
+
+module.exports.countArticles = async (req, res) => {
+    let count = await articleDb.find().count();
+    res.status(200).send(count.toString());
+}
+
+
+module.exports.countEvents = async (req, res) => {
+    let count = await EventDb.find().count();
+    res.status(200).send(count.toString());
+}
