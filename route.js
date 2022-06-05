@@ -8,6 +8,7 @@ const requestHandlers = require("./requestHandlers.js");
 
 
 ArticleRouter
+    .get('/count', (req, res) => { requestHandlers.countArticles(req, res)})
     .get('/', (req, res) => { requestHandlers.getArticles(req, res) })
     .get('/:article_id', (req, res) => { requestHandlers.getArticle(req, res) })
     .get('/:user_id/article',(req, res) => { requestHandlers.getUserArticles(req, res) })
@@ -22,6 +23,7 @@ ImageRouter
 
 EventRouter
 .get('/',(req,res)=>{requestHandlers.get_eventsByTag(req,res)})
+.get('/count', (req, res) => { requestHandlers.countEvents(req, res)})
 .get('/:user_id', (req, res) => { requestHandlers.getEvents(req, res) })
 .post('/', (req, res) => { requestHandlers.addEvent(req, res) })
 .post('/:event_id', (req, res) => { requestHandlers.register_to_event(req, res) })

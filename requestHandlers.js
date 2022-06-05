@@ -234,3 +234,14 @@ module.exports.get_eventsByTag = (req, res) => {
         }, (err) => console.log(err))
         .catch((err) => { console.log(err); res.status(400).send("something went wrong") });
 }
+
+module.exports.countArticles = async (req, res) => {
+    let count = await articleDb.find().count();
+    res.status(200).send(count.toString());
+}
+
+
+module.exports.countEvents = async (req, res) => {
+    let count = await EventDb.find().count();
+    res.status(200).send(count.toString());
+}
