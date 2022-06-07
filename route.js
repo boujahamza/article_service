@@ -19,14 +19,17 @@ ArticleRouter
 
 ImageRouter
     .get('/:key', (req, res) => { requestHandlers.getImage(req, res) })
-    .get('/',(req, res) => { console.log("eehigelgh");requestHandlers.getImages(req, res) })
+    .get('/',(req, res) => { requestHandlers.getImages(req, res) })
     .post("/",(req, res) => { requestHandlers.addImages(req, res) })
 
 EventRouter
+.get('/',(req,res)=>{requestHandlers.get_eventsByTag(req,res)})
 .get('/count', (req, res) => { requestHandlers.countEvents(req, res)})
 .get('/:user_id', (req, res) => { requestHandlers.getEvents(req, res) })
 .post('/', (req, res) => { requestHandlers.addEvent(req, res) })
 .post('/:event_id', (req, res) => { requestHandlers.register_to_event(req, res) })
+.delete("/:event_id",(req, res) => { requestHandlers.delete_event(req, res) })
+.put("/:event_id",(req, res) => { requestHandlers.cancelRegistration_to_event(req, res) })
 
 
 module.exports= {

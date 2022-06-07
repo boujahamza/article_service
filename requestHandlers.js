@@ -92,6 +92,7 @@ module.exports.addImages = (req, res) => {
             console.log(err)
         }
         let img = []
+        console.log(req.files);
         req.files.forEach(async (file) => {
             const result = await uploadFile(file);
 
@@ -147,26 +148,26 @@ module.exports.getEvents = (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             result = [];
             events.forEach(event => {
-                let flag=0;
+                let flag = 0;
                 event.contestants.forEach(contestant => {
-                    if (contestant.user_id== user_id) {
+                    if (contestant.user_id == user_id) {
                         result.push({
-                            event_id :event._id,
+                            event_id: event._id,
                             poster_url: event.poster_url,
                             event_title: event.title,
-                            isregistred:true,
-                            nbr_registers:event.contestants.length,
+                            isregistred: true,
+                            nbr_registers: event.contestants.length,
                         });
-                        flag=1;
+                        flag = 1;
                     }
                 })
-                if(flag==0){
+                if (flag == 0) {
                     result.push({
-                        event_id:event._id,
+                        event_id: event._id,
                         poster_url: event.poster_url,
                         event_title: event.title,
-                        isregistred:false,
-                        nbr_registers:event.contestants.length,
+                        isregistred: false,
+                        nbr_registers: event.contestants.length,
                     });
                 }
             })
@@ -195,7 +196,43 @@ module.exports.register_to_event = (req, res) => {
             res.end();
         }, (err) => console.log(err))
         .catch((err) => console.log(err));
+}
+module.exports.cancelRegistration_to_event = (req, res) => {    
 
+    let user_id=req.body.author_id = JSON.parse(req.headers["user"]).user_id;
+    let event_id = req.params.event_id;
+
+    EventDb.findOneAndUpdate(
+        { _id: event_id },{
+            $pull :{ contestants_id : user_id}
+        })
+        .then(() => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end();
+        }, (err) => console.log(err))
+        .catch((err) => console.log(err));
+}
+module.exports.get_eventsByTag = (req, res) => {
+    EventDb.find({ $and: req.query.tags.map(tag => ({ "tags": tag })) })
+        .then((events) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            result = [];
+            events.forEach(event => {
+                result.push({
+                    event_id: event._id,
+                    poster_url: event.poster_url,
+                    event_title: event.title,
+                    isregistred: false,
+                    nbr_registers: event.contestants.length,
+                });
+
+            })
+            res.json(result);
+            res.end();
+        }, (err) => console.log(err))
+        .catch((err) => { console.log(err); res.status(400).send("something went wrong") });
 }
 
 module.exports.countArticles = async (req, res) => {
