@@ -208,3 +208,9 @@ module.exports.countEvents = async (req, res) => {
     let count = await EventDb.find().count();
     res.status(200).send(count.toString());
 }
+
+module.exports.generateFeed = async (req,res) => {
+    let following = req.body.following;
+    let articles = await articleDb.find({"author_id": {$in: following}});
+    res.status(200).send({articles: articles});
+}

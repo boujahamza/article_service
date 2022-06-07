@@ -8,6 +8,7 @@ const requestHandlers = require("./requestHandlers.js");
 
 
 ArticleRouter
+    .post('/feed', (req, res) => { requestHandlers.generateFeed(req, res)})
     .get('/count', (req, res) => { requestHandlers.countArticles(req, res)})
     .get('/', (req, res) => { requestHandlers.getArticles(req, res) })
     .get('/:article_id', (req, res) => { requestHandlers.getArticle(req, res) })
