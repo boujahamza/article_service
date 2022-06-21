@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: articles
-        image: streamio.azurecr.io/streamio-backend_articles:v1
+        image: streamio.azurecr.io/streamio-backend_articles:latest
         env:
           - name: MONGO_URI
             valueFrom:
