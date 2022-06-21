@@ -16,17 +16,16 @@ jobs:
     - uses: actions/checkout@main
     
     # Connect to Azure Container Registry (ACR)
-    - id: login
-      uses: azure/docker-login@v1
+    - uses: azure/docker-login@v1
       with:
         login-server: ${{ env.REGISTRY_NAME }}.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }} 
         password: ${{ secrets.REGISTRY_PASSWORD }}
-      if: steps.login.outcome == 'success'
-
+    
     # Container build and push to a Azure Container Registry (ACR)
     - run: |
         docker build . -t ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:latest
+        docker images
         docker push ${{ env.REGISTRY_NAME }}.azurecr.io/${{ env.APP_NAME }}:latest
       working-directory: .
 
