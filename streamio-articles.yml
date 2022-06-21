@@ -24,7 +24,7 @@ spec:
                 name: articles-secrets
                 key: mongo_uri
           - name: PORT
-            value: 3000
+            value: "3000"
         ports:
         - containerPort: 3000
 ---
