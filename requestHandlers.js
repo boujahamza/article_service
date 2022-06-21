@@ -5,6 +5,7 @@ const EventDb = require("./Models/Events.js");
 
 
 module.exports.getArticles = (req, res) => {
+    console.log("received request for all articles");
     articleDb.find({})
         .then((articles) => {
             res.statusCode = 200;
