@@ -22,16 +22,19 @@ app.use('/article',router.ArticleRouter);
 app.use('/images',router.ImageRouter);
 app.use('/events',router.EventRouter);
 
+
+port = process.env.PORT || 3000;
+
 //upload image 
 
-server.listen(3000, () => {
-    console.log('listening on *:3000');
+server.listen(port, () => {
+    console.log("listening on port" + port);
 }); 
 
 //data base
 
 const mongoose = require('mongoose');
-const url = 'mongodb://127.0.0.1:27017';
+const url = process.env.MONGO_URI;
 const connect = mongoose.connect(url);
 connect.then((db) => {
     console.log("Connected correctly to the data base server");
