@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@main
     
     - run: |
-      docker logout
+        docker logout
 
     # Connect to Azure Container Registry (ACR)
     - uses: azure/docker-login@v1
